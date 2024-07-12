@@ -6,6 +6,6 @@ lint:
 	poetry run flake8
 PORT ?= 8000
 start:
-	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer:app
+	poetry run gunicorn -w 5 -b 0.0.0.0:$(PORT) page_analyzer.app:app
 waitress-serve:
 	poetry run waitress-serve --listen='0.0.0.0:$(PORT)' page_analyzer.app:app
