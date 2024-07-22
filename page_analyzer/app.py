@@ -69,6 +69,7 @@ def post_url():
         flash('Страница уже существует', 'info')
         return redirect(url_for('get_url', id=selection[0])), 302
 
+    cursor = connection.cursor()
     cursor.execute('''
         INSERT INTO urls (name, created_at)
         VALUES (%s, NOW())
