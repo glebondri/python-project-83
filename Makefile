@@ -4,6 +4,8 @@ build:
 	make install && psql -a -d $(DB_SECRET) -f database.sql
 reset:
 	psql -a -d $(DB_SECRET) -f reset.sql
+dev-build:
+	make install && make reset && psql -a -d $(DB_SECRET) -f database.sql
 dev:
 	poetry run flask --debug --app page_analyzer.app:app run
 lint:
