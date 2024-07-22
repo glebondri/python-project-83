@@ -35,7 +35,6 @@ def get_urls():
         SELECT id, name FROM urls ORDER BY id DESC;
     ''')
     urls = cursor.fetchall()
-    cursor.close()
 
     return render_template(
         'urls.html',
@@ -78,7 +77,6 @@ def post_url():
     id = cursor.fetchone()[0]
 
     connection.commit()
-    cursor.close()
 
     flash('Страница успешно добавлена', 'success')
     return redirect(url_for('get_url', id=id)), 302
@@ -94,7 +92,6 @@ def get_url(id):
             WHERE id = %s;
         ''', (id,))
     url = cursor.fetchone()
-    cursor.close()
 
     if url is None:
         # return 'url does\'nt exists!'
