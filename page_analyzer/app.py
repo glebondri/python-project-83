@@ -11,7 +11,7 @@ import validators
 import os
 
 
-load_dotenv()
+load_dotenv(override=True)
 
 app = Flask(__name__)
 app.secret_key = os.getenv('APP_SECRET')
@@ -59,28 +59,26 @@ def post_url():
     url = urlunparse(parsed)
 
     cursor = connection.cursor()
-    cursor.execute('''
-        SELECT id FROM urls
-        WHERE name = %s;
-    ''', (url,))
+    cursor.execute('''SELECT id FROM urls WHERE name = %s;''', (url,))
     selection = cursor.fetchone()
 
     if selection is not None:
         flash('Страница уже существует', 'info')
         return redirect(url_for('get_url', id=selection[0])), 302
 
-    cursor = connection.cursor()
-    cursor.execute('''
-        INSERT INTO urls (name, created_at)
-        VALUES (%s, NOW())
-        RETURNING id;
-    ''', (url,))  # datetime.now().isoformat()
-    id = cursor.fetchone()[0]
-
-    connection.commit()
-
-    flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('get_url', id=id)), 302
+    # cursor = connection.cursor()
+    # cursor.execute('''
+    #     INSERT INTO urls (name, created_at)
+    #     VALUES (%s, NOW())
+    #     RETURNING id;
+    # ''', (url,))  # datetime.now().isoformat()
+    # id = cursor.fetchone()[0]
+    #
+    # connection.commit()
+    #
+    # flash('Страница успешно добавлена', 'success')
+    # return redirect(url_for('get_url', id=id)), 302
+    return render_template('index.html')
 
 
 @app.route('/urls/<int:id>', methods=['GET'])
