@@ -36,6 +36,8 @@ def get_urls():
     ''')
     urls = cursor.fetchall()
 
+    cursor.close()
+
     return render_template(
         'urls.html',
         urls=urls,
@@ -66,19 +68,19 @@ def post_url():
         flash('Страница уже существует', 'info')
         return redirect(url_for('get_url', id=selection[0])), 302
 
-    # cursor = connection.cursor()
-    # cursor.execute('''
-    #     INSERT INTO urls (name, created_at)
-    #     VALUES (%s, NOW())
-    #     RETURNING id;
-    # ''', (url,))  # datetime.now().isoformat()
-    # id = cursor.fetchone()[0]
-    #
-    # connection.commit()
-    #
-    # flash('Страница успешно добавлена', 'success')
-    # return redirect(url_for('get_url', id=id)), 302
-    return render_template('index.html')
+    cursor = connection.cursor()
+    cursor.execute('''
+        INSERT INTO urls (name, created_at)
+        VALUES (%s, NOW())
+        RETURNING id;
+    ''', (url,))  # datetime.now().isoformat()
+    id = cursor.fetchone()[0]
+
+    connection.commit()
+
+    flash('Страница успешно добавлена', 'success')
+    return redirect(url_for('get_url', id=id)), 302
+    # return render_template('index.html')
 
 
 @app.route('/urls/<int:id>', methods=['GET'])
