@@ -36,8 +36,6 @@ def get_urls():
     ''')
     urls = cursor.fetchall()
 
-    cursor.close()
-
     return render_template(
         'urls.html',
         urls=urls,
@@ -61,10 +59,12 @@ def post_url():
     url = urlunparse(parsed)
 
     cursor = connection.cursor()
-    cursor.execute('''SELECT id FROM urls WHERE name = %s;''', (url,))
+    cursor.execute('''
+        SELECT id FROM urls WHERE name = %s;
+    ''', (url,))
     selection = cursor.fetchone()
 
-    if selection is not None:
+    if selection:
         flash('Страница уже существует', 'info')
         return redirect(url_for('get_url', id=selection[0])), 302
 
@@ -80,7 +80,6 @@ def post_url():
 
     flash('Страница успешно добавлена', 'success')
     return redirect(url_for('get_url', id=id)), 302
-    # return render_template('index.html')
 
 
 @app.route('/urls/<int:id>', methods=['GET'])
@@ -95,7 +94,6 @@ def get_url(id):
     url = cursor.fetchone()
 
     if url is None:
-        # return 'url does\'nt exists!'
         return render_template(
             'not_found.html'
         ), 404
