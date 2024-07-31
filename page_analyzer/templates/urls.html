@@ -32,7 +32,7 @@
                 {% for id, url in urls %}
                 <tr>
                     <td class="col">{{ id }}</td>
-                    <td class="col"><a href="#">{{ url }}</a></td>
+                    <td class="col"><a href="{{ url_for('get_url', id=id) }}">{{ url }}</a></td>
                     <td class="col"></td>
                     <td class="col"></td>
                 </tr>
