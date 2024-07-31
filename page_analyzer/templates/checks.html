@@ -13,21 +13,49 @@
 
     <div class="container">
         <div class="mt-3">
-            <h1>Сайт: {{ data.name }}</h1>
-            <table class="table table-bordered table-responsive table-hover" data-test="url">
+            <h1>Сайт: {{ url_data.name }}</h1>
+            <table class="table mb-5 table-bordered table-responsive table-hover" data-test="url">
                 <tbody>
                 <tr>
                     <td class="col">ID</td>
-                    <td class="col">{{ data.id }}</td>
+                    <td class="col">{{ url_data.id }}</td>
                 </tr>
-                <tr>
+                <tr>    
                     <td class="col">Имя</td>
-                    <td class="col">{{ data.name }}</td>
+                    <td class="col">{{ url_data.name }}</td>
                 </tr>
                 <tr>
                     <td class="col">Дата создания</td>
-                    <td class="col">{{ data.created_at }}</td>
+                    <td class="col">{{ url_data.created_at }}</td>
                 </tr>
+                </tbody>
+            </table>
+
+            <h2 class="mb-3">Проверки</h2>
+            <form action="/urls/{{ url_data.id }}/checks" method="post">
+                <input class="btn mb-2 btn-primary" type="submit" value="Запустить проверку">
+            </form>
+
+            <table class="table table-bordered table-responsive table-hover" data-test="url">
+                <thead>
+                    <th class="col">ID</th>
+                    <th class="col">Код ответа</th>
+                    <th class="col">h1</th>
+                    <th class="col">title</th>
+                    <th class="col">description</th>
+                    <th class="col">Дата создания</th>
+                </thead>
+                <tbody>
+                    {% for id, created_at in url_checks %}
+                    <tr>
+                        <td class="col">{{ id }}</td>
+                        <td class="col">200</td>
+                        <td class="col"></td>
+                        <td class="col"></td>
+                        <td class="col"></td>
+                        <td class="col">{{ created_at }}</td>
+                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
