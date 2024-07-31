@@ -3,3 +3,13 @@ CREATE TABLE IF NOT EXISTS urls (
     name VARCHAR(255) UNIQUE NOT NULL,
     created_at TIMESTAMP NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS url_checks (
+    id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    url_id INT REFERENCES urls (id) NOT NULL,
+    status_code INT NOT NULL,
+    h1 TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL
+);
