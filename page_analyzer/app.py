@@ -88,9 +88,9 @@ def get_url(id):
 
     cursor = connection.cursor()
     cursor.execute('''
-            SELECT id, name, created_at FROM urls
-            WHERE id = %s;
-        ''', (id,))
+        SELECT id, name, created_at FROM urls
+        WHERE id = %s;
+    ''', (id,))
     url = cursor.fetchone()
 
     if url is None:
@@ -98,10 +98,36 @@ def get_url(id):
             'not_found.html'
         ), 404
 
-    data = dict(zip(
+    cursor.execute('''
+        SELECT 
+            url_checks.id, url_checks.created_at 
+        FROM url_checks
+            WHERE %s = url_checks.url_id; 
+    ''', (id,))
+    url_checks = cursor.fetchall()
+
+    url_data = dict(zip(
         ('id', 'name', 'created_at'), url))
+
     return render_template(
         'checks.html',
-        data=data,
+        url_data=url_data,
+        url_checks=url_checks,
         messages=messages
     )
+
+
+@app.route('/urls/<int:id>/checks', methods=['POST'])
+def check_url(id):
+    cursor = connection.cursor()
+    cursor.execute('''  
+        INSERT INTO url_checks
+            (url_id, created_at, status_code, h1, title, description)
+        VALUES
+            (%s, NOW(), 200, '', '', '')
+    ''', (id,))
+
+    connection.commit()
+
+    flash('Страница успешно добавлена', 'success')
+    return redirect(url_for('get_url', id=id))
