@@ -46,10 +46,10 @@
                     <th class="col">Дата создания</th>
                 </thead>
                 <tbody>
-                    {% for id, created_at in url_checks %}
+                    {% for id, status_code, created_at in url_checks %}
                     <tr>
                         <td class="col">{{ id }}</td>
-                        <td class="col">200</td>
+                        <td class="col">{{ status_code }}</td>
                         <td class="col"></td>
                         <td class="col"></td>
                         <td class="col"></td>

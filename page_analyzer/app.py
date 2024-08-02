@@ -32,7 +32,16 @@ def get_urls():
 
     cursor = connection.cursor()
     cursor.execute('''
-        SELECT id, name FROM urls ORDER BY id DESC;
+        SELECT DISTINCT ON (urls.id)
+            urls.id,
+            urls.name,
+            checks.status_code AS code,
+            MAX(checks.created_at)
+        FROM urls
+        LEFT JOIN url_checks AS checks ON
+            urls.id = checks.url_id
+        GROUP BY urls.id, urls.name, code
+        ORDER BY urls.id DESC;
     ''')
     urls = cursor.fetchall()
 
@@ -99,10 +108,12 @@ def get_url(id):
         ), 404
 
     cursor.execute('''
-        SELECT 
-            url_checks.id, url_checks.created_at 
-        FROM url_checks
-            WHERE %s = url_checks.url_id; 
+        SELECT
+            checks.id,
+            checks.status_code,
+            checks.created_at
+        FROM url_checks AS checks
+            WHERE %s = checks.url_id;
     ''', (id,))
     url_checks = cursor.fetchall()
 
@@ -120,7 +131,7 @@ def get_url(id):
 @app.route('/urls/<int:id>/checks', methods=['POST'])
 def check_url(id):
     cursor = connection.cursor()
-    cursor.execute('''  
+    cursor.execute('''
         INSERT INTO url_checks
             (url_id, created_at, status_code, h1, title, description)
         VALUES

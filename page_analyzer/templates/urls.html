@@ -29,12 +29,12 @@
                     <td class="col">200</td>
                 </tr> -->
                 
-                {% for id, url in urls %}
+                {% for id, url, code, created_at in urls %}
                 <tr>
                     <td class="col">{{ id }}</td>
                     <td class="col"><a href="{{ url_for('get_url', id=id) }}">{{ url }}</a></td>
-                    <td class="col"></td>
-                    <td class="col"></td>
+                    <td class="col">{{ code or '' }}</td>
+                    <td class="col">{{ created_at or '' }}</td>
                 </tr>
                 {% endfor %}
 
