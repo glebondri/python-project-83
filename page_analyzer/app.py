@@ -62,7 +62,7 @@ def post_url():
             'index.html',
             url=url,
             messages=get_flashed_messages(with_categories=True)
-        )
+        ), 422
 
     parsed = urlparse(url)._replace(query='', path='', params='')
     url = urlunparse(parsed)
@@ -125,7 +125,7 @@ def get_url(id):
         url_data=url_data,
         url_checks=url_checks,
         messages=messages
-    )
+    ), 200
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
@@ -141,4 +141,4 @@ def check_url(id):
     connection.commit()
 
     flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('get_url', id=id))
+    return redirect(url_for('get_url', id=id)), 302
