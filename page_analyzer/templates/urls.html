@@ -33,8 +33,8 @@
                 <tr>
                     <td class="col">{{ id }}</td>
                     <td class="col"><a href="{{ url_for('get_url', id=id) }}">{{ url }}</a></td>
-                    <td class="col">{{ code or '' }}</td>
                     <td class="col">{{ created_at or '' }}</td>
+                    <td class="col">{{ code or '' }}</td>
                 </tr>
                 {% endfor %}
 
