@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS urls (
     id INT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) UNIQUE NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at DATE NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS url_checks (
@@ -11,5 +11,5 @@ CREATE TABLE IF NOT EXISTS url_checks (
     h1 TEXT NOT NULL,
     title TEXT NOT NULL,
     description TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at DATE NOT NULL
 );

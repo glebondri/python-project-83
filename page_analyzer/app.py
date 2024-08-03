@@ -5,6 +5,7 @@ from flask import url_for
 
 from dotenv import load_dotenv
 from urllib.parse import urlparse, urlunparse
+from datetime import date
 
 import psycopg2
 import validators
@@ -80,9 +81,9 @@ def post_url():
     cursor = connection.cursor()
     cursor.execute('''
         INSERT INTO urls (name, created_at)
-        VALUES (%s, NOW())
+        VALUES (%s, %s)
         RETURNING id;
-    ''', (url,))  # datetime.now().isoformat()
+    ''', (url, date.today().isoformat()))  # datetime.now().isoformat()
     id = cursor.fetchone()[0]
 
     connection.commit()
@@ -135,8 +136,8 @@ def check_url(id):
         INSERT INTO url_checks
             (url_id, created_at, status_code, h1, title, description)
         VALUES
-            (%s, NOW(), 200, '', '', '')
-    ''', (id,))
+            (%s, %s, 200, '', '', '')
+    ''', (id, date.today().isoformat()))
 
     connection.commit()
 
