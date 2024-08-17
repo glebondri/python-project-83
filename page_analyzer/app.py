@@ -5,10 +5,11 @@ from flask import url_for
 
 from dotenv import load_dotenv
 from urllib.parse import urlparse, urlunparse
-from datetime import date
 
 import psycopg2
+import requests
 import validators
+import datetime
 import os
 
 
@@ -78,12 +79,14 @@ def post_url():
         flash('Страница уже существует', 'info')
         return redirect(url_for('get_url', id=selection[0])), 302
 
+    date = datetime.date.today().isoformat()
+
     cursor = connection.cursor()
     cursor.execute('''
         INSERT INTO urls (name, created_at)
         VALUES (%s, %s)
         RETURNING id;
-    ''', (url, date.today().isoformat()))  # datetime.now().isoformat()
+    ''', (url, date))
     id = cursor.fetchone()[0]
 
     connection.commit()
@@ -133,13 +136,32 @@ def get_url(id):
 def check_url(id):
     cursor = connection.cursor()
     cursor.execute('''
-        INSERT INTO url_checks
-            (url_id, created_at, status_code, h1, title, description)
-        VALUES
-            (%s, %s, 200, '', '', '')
-    ''', (id, date.today().isoformat()))
+        SELECT name FROM urls
+        WHERE id = %s;
+    ''', (id,))
+    url = cursor.fetchone()[0]
 
-    connection.commit()
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
 
-    flash('Страница успешно добавлена', 'success')
-    return redirect(url_for('get_url', id=id)), 302
+        date = datetime.date.today().isoformat()
+        status_code = response.status_code
+
+        cursor = connection.cursor()
+        cursor.execute('''
+            INSERT INTO url_checks
+                (url_id, created_at, status_code, h1, title, description)
+            VALUES
+                (%s, %s, %s, '', '', '')
+        ''', (id, date, status_code))
+
+        connection.commit()
+
+        flash('Страница успешно добавлена', 'success')
+        return redirect(url_for('get_url', id=id)), 302
+
+    except (requests.HTTPError, requests.ConnectionError):
+        flash('Произошла ошибка при проверке', 'danger')
+        return redirect(url_for('get_url', id=id)), 302
+
