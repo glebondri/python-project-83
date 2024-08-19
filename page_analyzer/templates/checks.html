@@ -46,13 +46,13 @@
                     <th class="col">Дата создания</th>
                 </thead>
                 <tbody>
-                    {% for id, status_code, created_at in url_checks %}
+                    {% for id, status_code, created_at, h1, title, description in url_checks %}
                     <tr>
                         <td class="col">{{ id }}</td>
                         <td class="col">{{ status_code }}</td>
-                        <td class="col"></td>
-                        <td class="col"></td>
-                        <td class="col"></td>
+                        <td class="col">{{ h1 if h1 else '' }}</td>
+                        <td class="col">{{ title if title else '' }}</td>
+                        <td class="col">{{ description if description else '' }}</td>
                         <td class="col">{{ created_at }}</td>
                     </tr>
                     {% endfor %}

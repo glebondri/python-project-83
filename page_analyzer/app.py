@@ -3,6 +3,7 @@ from flask import render_template, redirect
 from flask import request, flash, get_flashed_messages
 from flask import url_for
 
+from page_analyzer import utils
 from dotenv import load_dotenv
 from urllib.parse import urlparse, urlunparse
 
@@ -115,7 +116,10 @@ def get_url(id):
         SELECT
             checks.id,
             checks.status_code,
-            checks.created_at
+            checks.created_at,
+            checks.h1,
+            checks.title,
+            checks.description
         FROM url_checks AS checks
             WHERE %s = checks.url_id;
     ''', (id,))
@@ -145,16 +149,20 @@ def check_url(id):
         response = requests.get(url)
         response.raise_for_status()
 
-        date = datetime.date.today().isoformat()
         status_code = response.status_code
+        date = datetime.date.today().isoformat()
+
+        html = response.text
+        h1, title, description = utils.parse_html(html)
 
         cursor = connection.cursor()
         cursor.execute('''
             INSERT INTO url_checks
                 (url_id, created_at, status_code, h1, title, description)
             VALUES
-                (%s, %s, %s, '', '', '')
-        ''', (id, date, status_code))
+                (%s, %s, %s, %s, %s, %s)
+        ''', (id, date, status_code,
+              h1, title, description))
 
         connection.commit()
 
@@ -164,4 +172,3 @@ def check_url(id):
     except (requests.HTTPError, requests.ConnectionError):
         flash('Произошла ошибка при проверке', 'danger')
         return redirect(url_for('get_url', id=id)), 302
-
