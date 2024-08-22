@@ -31,6 +31,8 @@ def index():
 
 @app.route('/urls', methods=['GET'])
 def get_urls():
+    """Displays a list of URLs the user has added"""
+
     messages = get_flashed_messages(with_categories=True)
 
     cursor = connection.cursor()
@@ -57,6 +59,8 @@ def get_urls():
 
 @app.route('/urls', methods=['POST'])
 def post_url():
+    """Posts a new URL to the database"""
+
     url = request.form.get('url')
 
     if not validators.url(url):
@@ -97,7 +101,9 @@ def post_url():
 
 
 @app.route('/urls/<int:id>', methods=['GET'])
-def get_url(id):
+def get_url(id: int):
+    """Displays information about the URL with the given ID, if found"""
+
     messages = get_flashed_messages(with_categories=True)
 
     cursor = connection.cursor()
@@ -137,7 +143,10 @@ def get_url(id):
 
 
 @app.route('/urls/<int:id>/checks', methods=['POST'])
-def check_url(id):
+def check_url(id: int):
+    """Runs an HTTP check for a
+    specified URL, enters the check result into database"""
+
     cursor = connection.cursor()
     cursor.execute('''
         SELECT name FROM urls
@@ -150,10 +159,10 @@ def check_url(id):
         response.raise_for_status()
 
         status_code = response.status_code
-        date = datetime.date.today().isoformat()
-
         html = response.text
+
         h1, title, description = utils.parse_html(html)
+        date = datetime.date.today().isoformat()
 
         cursor = connection.cursor()
         cursor.execute('''

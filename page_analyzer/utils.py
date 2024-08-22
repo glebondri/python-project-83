@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup
 
 
 def parse_html(html: str):
+    """Retrieves basic info over the HTML page"""
+
     soup = BeautifulSoup(html, 'html.parser')
 
     meta = soup.find(name='meta', attrs={'name': 'description'})
