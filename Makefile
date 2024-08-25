@@ -1,11 +1,11 @@
 install:
 	poetry install
 build:
-	make install && psql -a -d $(DB_SECRET) -f database.sql
+	make install && psql -a -d $(DATABASE_URL) -f database.sql
 reset:
 	psql -a -d $(DB_SECRET) -f reset.sql
 dev-build:
-	make install && make reset && psql -a -d $(DB_SECRET) -f database.sql
+	make install && make reset && psql -a -d $(DATABASE_URL) -f database.sql
 dev:
 	poetry run flask --debug --app page_analyzer.app:app run
 lint:

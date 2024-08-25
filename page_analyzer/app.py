@@ -19,7 +19,7 @@ load_dotenv(override=True)
 app = Flask(__name__)
 app.secret_key = os.getenv('APP_SECRET')
 
-connection = psycopg2.connect(os.getenv('DB_SECRET'))
+connection = psycopg2.connect(os.getenv('DATABASE_URL'))
 
 
 @app.route('/')
