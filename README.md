@@ -15,12 +15,12 @@
     $ make install
 
 *Note:*
-> `'APP_SECRET'` & `'DATABASE_URL'` variables must be specified in `.env` file
+> `'SECRET_KEY'` & `'DATABASE_URL'` variables must be specified in `.env` file
 > 
 > or, defined via `environment variables`
 
 ## Running a Server:
-> Fulfill the migration by running `make build ` before starting a server
+> Fulfill the migration by running `make build` before starting a server
 
 Use `'make dev'` to run a local server (dev purpose, w/ interactive traceback),
 
