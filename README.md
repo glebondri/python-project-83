@@ -1,6 +1,9 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/glebondri/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/glebondri/python-project-83/actions)
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/492e58e7971271712d25/maintainability)](https://codeclimate.com/github/glebondri/python-project-83/maintainability)
+
+
 # Page Analyzer
 **A web tool to test out the URL's accessibility**
 
