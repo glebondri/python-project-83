@@ -17,7 +17,7 @@ import os
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
 connection = psycopg2.connect(os.getenv('DATABASE_URL'))
 
